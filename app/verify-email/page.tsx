@@ -1,35 +1,25 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import StatusIcon from "@/components/status-icon";
-import { auth0 } from "@/lib/auth0";
-import Link from "next/link";
+import { getUser } from "@/lib/session";
 
-const DEFAULT_RETURN_TO = "/get-started";
-
-const safeReturnTo = (value: string | string[] | undefined): string => {
-  if (typeof value !== "string" || !value.startsWith("/")) {
-    return DEFAULT_RETURN_TO;
-  }
-
-  if (value.startsWith("//") || value.startsWith("/\\")) {
-    return DEFAULT_RETURN_TO;
-  }
-
-  return value;
-};
-
-const VerifyEmail = async ({
+export default async function VerifyEmail({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) => {
-  const { returnTo } = await searchParams;
-  const destination = safeReturnTo(returnTo);
-  const session = await auth0.getSession();
+  searchParams: Promise<{ again?: string }>;
+}) {
+  const user = await getUser();
 
-  if (session?.user.email_verified) {
-    redirect(destination);
+  if (!user) {
+    redirect("/sign-in");
   }
+
+  if (user.emailVerified) {
+    redirect("/get-started");
+  }
+
+  const { again } = await searchParams;
 
   return (
     <>
@@ -38,19 +28,24 @@ const VerifyEmail = async ({
       <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">Verify your email</h1>
 
       <p className="mt-6 max-w-md text-xl font-medium text-muted-foreground">
-        We sent you a link. Open it, then come back here to finish setting up your account.
+        {again ? "Still not verified. Open the link we sent to " : "We sent a link to "}
+        <strong className="font-bold text-foreground">{user.email}</strong>
+        {again ? ", then try again." : ". Open it, then come back here."}
       </p>
 
       <Link
-        // href={`/auth/login?prompt=login&returnTo=${encodeURIComponent(destination)}`}
-        href={"/auth/login?returnTo=/get-started"}
+        href="/get-started?check=1"
         className="mt-12 text-2xl font-bold underline underline-offset-8"
       >
         I've verified my email
       </Link>
 
+      <a
+        href="/auth/logout"
+        className="mt-8 text-lg font-medium text-muted-foreground underline underline-offset-4"
+      >
+        Use a different account
+      </a>
     </>
   );
-};
-
-export default VerifyEmail;
+}
