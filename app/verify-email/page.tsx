@@ -37,7 +37,7 @@ export default async function VerifyEmail({
         href="/get-started?check=1"
         className="mt-12 text-2xl font-bold underline underline-offset-8"
       >
-        I've verified my email
+        I&apos;ve verified my email
       </Link>
 
       <a
