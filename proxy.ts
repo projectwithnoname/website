@@ -6,6 +6,10 @@ export async function proxy(request: Request) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    // /api/extension is excluded on purpose: those routes authenticate with a
+    // bearer token rather than the Auth0 session cookie, and running session
+    // rolling on them would attach Set-Cookie headers to cross-origin responses
+    // the extension has no use for.
+    "/((?!_next/static|_next/image|favicon.ico|api/extension).*)",
   ],
 };
