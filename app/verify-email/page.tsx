@@ -25,10 +25,14 @@ export default async function VerifyEmail({
     <>
       <StatusIcon name="email" />
 
-      <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">Verify your email</h1>
+      <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">
+        Verify your email
+      </h1>
 
       <p className="mt-6 max-w-md text-xl font-medium text-muted-foreground">
-        {again ? "Still not verified. Open the link we sent to " : "We sent a link to "}
+        {again
+          ? "Still not verified. Open the link we sent to "
+          : "We sent a link to "}
         <strong className="font-bold text-foreground">{user.email}</strong>
         {again ? ", then try again." : ". Open it, then come back here."}
       </p>

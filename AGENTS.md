@@ -8,13 +8,13 @@ add new instructions here, not there.
 ```bash
 npm run dev     # next dev — http://localhost:3000
 npm run build   # production build
-npm run lint    # eslint
-npm run check   # prettier --check + eslint
-npm run fix     # prettier --write + eslint --fix
+npm run lint          # eslint
+npm run format        # prettier --write .
+npm run format:check  # prettier --check .
 ```
 
-Prettier owns formatting (`.prettierrc` — `printWidth: 120`, matching
-`../extension`); `eslint-config-prettier` keeps ESLint out of its way.
+Prettier owns formatting (`.prettierrc`). ESLint keeps its stock
+`eslint-config-next` setup.
 
 ## What this app is
 
@@ -109,8 +109,8 @@ extension…".
 - **Layout owns the shape.** [app/layout.tsx](app/layout.tsx) centers a single
   column; pages supply only their own text and never their own wrapper.
 - **Arrow functions with explicit return types** in `lib/`; `export default
-  function` for pages.
-- Comments explain *why*, not what — the existing ones in `lib/session.ts` are
+function` for pages.
+- Comments explain _why_, not what — the existing ones in `lib/session.ts` are
   the house style.
 
 ## Environment

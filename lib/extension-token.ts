@@ -21,7 +21,9 @@ export const mintExtensionToken = (user: AppUser): string => {
     }),
   ).toString("base64url");
 
-  const signature = createHmac("sha256", secret).update(payload).digest("base64url");
+  const signature = createHmac("sha256", secret)
+    .update(payload)
+    .digest("base64url");
 
   return `${payload}.${signature}`;
 };

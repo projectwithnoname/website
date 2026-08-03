@@ -1,7 +1,7 @@
 import { prisma } from "@/prisma";
-import {PublicUser, CreateUser} from "@/types/User";
+import { PublicUser, CreateUser } from "@/types/User";
 
-export const getUsersFromDb = async () :Promise<PublicUser[]> => {
+export const getUsersFromDb = async (): Promise<PublicUser[]> => {
   return prisma.user.findMany({
     select: {
       id: true,
@@ -22,8 +22,6 @@ export const addUserToDb = async (data: CreateUser) => {
     },
   });
 };
-
-
 
 export const verifieUserStatus = async (auth0Id: string, newValue: boolean) => {
   return prisma.user.updateMany({

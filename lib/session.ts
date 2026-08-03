@@ -12,10 +12,13 @@ const isVerifiedLive = async (): Promise<boolean> => {
   try {
     const { token } = await auth0.getAccessToken();
 
-    const response = await fetch(`https://${process.env.AUTH0_DOMAIN}/userinfo`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `https://${process.env.AUTH0_DOMAIN}/userinfo`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      },
+    );
 
     if (!response.ok) {
       return false;
