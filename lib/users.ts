@@ -11,15 +11,23 @@ export const getUsersFromDb = async () :Promise<PublicUser[]> => {
 };
 
 export const addUserToDb = async (data: CreateUser) => {
+  return prisma.user.upsert({
+    where: { auth0Id: data.auth0Id },
+    create: {
+      auth0Id: data.auth0Id,
+      email: data.email,
+    },
+    update: {
+      email: data.email,
+    },
+  });
+};
 
 
-    const user = await prisma.user.create({
-        data: {
-            email: data.email,
-            authOId:data.auth0Id,
-        }
-    })
 
-    return user;
-}
-    
+export const verifieUserStatus = async (auth0Id: string, newValue: boolean) => {
+  return prisma.user.updateMany({
+    where: { auth0Id, validated: { not: newValue } },
+    data: { validated: newValue },
+  });
+};

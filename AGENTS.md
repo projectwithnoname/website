@@ -9,7 +9,12 @@ add new instructions here, not there.
 npm run dev     # next dev — http://localhost:3000
 npm run build   # production build
 npm run lint    # eslint
+npm run check   # prettier --check + eslint
+npm run fix     # prettier --write + eslint --fix
 ```
+
+Prettier owns formatting (`.prettierrc` — `printWidth: 120`, matching
+`../extension`); `eslint-config-prettier` keeps ESLint out of its way.
 
 ## What this app is
 
