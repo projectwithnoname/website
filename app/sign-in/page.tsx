@@ -1,7 +1,9 @@
 export default function SignIn() {
   return (
     <>
-      <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">Sign in</h1>
+      <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">
+        Sign in
+      </h1>
 
       <p className="mt-6 max-w-md text-xl font-medium text-muted-foreground">
         The extension needs an account to sync your highlights to.

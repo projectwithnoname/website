@@ -23,7 +23,15 @@ const StatusIcon = ({ name, size = 96 }: StatusIconProps) => {
   return (
     // `unoptimized` because these are already-small static SVGs; the optimizer
     // has nothing to do and refuses to rasterise SVG anyway.
-    <Image src={src} alt={alt} width={size} height={size} unoptimized priority className="mb-8" />
+    <Image
+      src={src}
+      alt={alt}
+      width={size}
+      height={size}
+      unoptimized
+      priority
+      className="mb-8"
+    />
   );
 };
 

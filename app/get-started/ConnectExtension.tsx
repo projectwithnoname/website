@@ -38,16 +38,20 @@ const deliver = (props: ConnectExtensionProps): Promise<Status> =>
       return;
     }
 
-    chrome.runtime.sendMessage(extensionId, { type: "AUTH_TOKEN", token, user }, (response) => {
-      const ok =
-        !chrome?.runtime?.lastError &&
-        typeof response === "object" &&
-        response !== null &&
-        "ok" in response &&
-        response.ok === true;
+    chrome.runtime.sendMessage(
+      extensionId,
+      { type: "AUTH_TOKEN", token, user },
+      (response) => {
+        const ok =
+          !chrome?.runtime?.lastError &&
+          typeof response === "object" &&
+          response !== null &&
+          "ok" in response &&
+          response.ok === true;
 
-      resolve(ok ? "connected" : "unavailable");
-    });
+        resolve(ok ? "connected" : "unavailable");
+      },
+    );
   });
 
 const ConnectExtension = (props: ConnectExtensionProps) => {
