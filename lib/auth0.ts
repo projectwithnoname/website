@@ -10,7 +10,11 @@ export const auth0 = new Auth0Client({
     const { sub, email } = session.user;
 
     if (email) {
-      await addUserToDb({ auth0Id: sub, email });
+      try {
+        await addUserToDb({ auth0Id: sub, email });
+      } catch (error) {
+        console.error("Could not persist user on session save:", error);
+      }
     }
 
     return { ...session, user: filterDefaultIdTokenClaims(session.user) };

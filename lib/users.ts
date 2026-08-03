@@ -23,7 +23,7 @@ export const addUserToDb = async (data: CreateUser) => {
   });
 };
 
-export const verifieUserStatus = async (auth0Id: string, newValue: boolean) => {
+export const verifyUserStatus = async (auth0Id: string, newValue: boolean) => {
   return prisma.user.updateMany({
     where: { auth0Id, validated: { not: newValue } },
     data: { validated: newValue },

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import StatusIcon from "@/components/status-icon";
 import { mintExtensionToken } from "@/lib/extension-token";
 import { getUser } from "@/lib/session";
-import { verifieUserStatus } from "@/lib/users";
+import { verifyUserStatus } from "@/lib/users";
 
 import ConnectExtension from "./ConnectExtension";
 
@@ -24,7 +24,7 @@ export default async function GetStarted({
     redirect(check ? "/verify-email?again=1" : "/verify-email");
   }
 
-  await verifieUserStatus(user.sub, true);
+  await verifyUserStatus(user.sub, true);
 
   return (
     <>

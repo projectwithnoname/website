@@ -18,11 +18,33 @@ Prettier owns formatting (`.prettierrc`). ESLint keeps its stock
 
 ## What this app is
 
-The account half of the Highlighter Chrome extension. It does two things and
-nothing else: sign the user in via Auth0, and hand a signed token to the
-extension once the account's email is verified. There is no database, no user
-storage, and no highlight data here — highlights live in the extension's
-`chrome.storage.local`.
+The account half of the Highlighter Chrome extension. It signs the user in via
+Auth0, keeps a row per account in Postgres, and hands a signed token to the
+extension once the account's email is verified. No highlight data lives here —
+highlights stay in the extension's `chrome.storage.local`.
+
+## Database
+
+Postgres via Prisma. One model, `User` in [prisma/schema.prisma](prisma/schema.prisma)
+— `auth0Id` (unique, the Auth0 `sub`), `email`, and `validated`. The generated
+client lands in `lib/generated/prisma` and is gitignored, so a fresh clone needs
+`npx prisma generate` before it will typecheck.
+
+[prisma.ts](prisma.ts) exports the client as a `globalThis` singleton — without
+it, Next's hot reload opens a fresh connection pool on every edit.
+[prisma.config.ts](prisma.config.ts) points migrations at `DIRECT_URL`;
+migrations must not run over a pooled connection.
+
+All queries go through [lib/users.ts](lib/users.ts) — pages and routes never
+touch `prisma` directly. Writes happen in two places:
+
+1. [lib/auth0.ts](lib/auth0.ts) — `beforeSessionSaved` upserts the user. It is
+   the one hook that fires for both fresh sign-ups and returning sign-ins. The
+   upsert is wrapped in try/catch on purpose: a database outage must not become
+   an auth outage.
+2. [app/get-started/page.tsx](app/get-started/page.tsx) — `verifyUserStatus`
+   flips `validated` once the live check passes. The `validated: { not: … }`
+   guard means repeat visits write nothing.
 
 ## Auth flow
 
@@ -116,7 +138,9 @@ function` for pages.
 ## Environment
 
 `.env.local` holds `APP_BASE_URL`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`,
-`AUTH0_CLIENT_SECRET`, `AUTH0_SECRET`, `EXTENSION_TOKEN_SECRET`, `EXTENSION_ID`.
+`AUTH0_CLIENT_SECRET`, `AUTH0_SECRET`, `EXTENSION_TOKEN_SECRET`, `EXTENSION_ID`,
+`DATABASE_URL` (pooled — used at runtime) and `DIRECT_URL` (unpooled — used by
+migrations).
 
 **Ask before editing `.env.local`, and append rather than rewriting it.** In the
 Auth0 dashboard, Allowed Callback URLs must include `{APP_BASE_URL}/auth/callback`
