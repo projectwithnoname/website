@@ -27,8 +27,11 @@ highlights stay in the extension's `chrome.storage.local`.
 
 Postgres via Prisma. One model, `User` in [prisma/schema.prisma](prisma/schema.prisma)
 — `auth0Id` (unique, the Auth0 `sub`), `email`, and `validated`. The generated
-client lands in `lib/generated/prisma` and is gitignored, so a fresh clone needs
-`npx prisma generate` before it will typecheck.
+client lands in `lib/generated/prisma` and is gitignored, so nothing imports
+`@prisma/client` directly — [prisma.ts](prisma.ts) imports from that path. The
+`postinstall` script regenerates it after every install; without that, a fresh
+clone or a CI runner fails the build with
+`Can't resolve './lib/generated/prisma/client'`.
 
 [prisma.ts](prisma.ts) exports the client as a `globalThis` singleton — without
 it, Next's hot reload opens a fresh connection pool on every edit.
