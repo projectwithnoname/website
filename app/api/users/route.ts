@@ -1,7 +1,7 @@
 import { getUser } from "@/lib/session";
 import { getUsersFromDb } from "@/lib/users";
 
-export const GET = async () => {
+export async function GET () {
   const user = await getUser();
 
   if (!user) {
