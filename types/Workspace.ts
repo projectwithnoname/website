@@ -1,5 +1,6 @@
 export interface CreateWorkspace {
   name: string;
+  memberIds: string[];
 }
 
 export interface PublicWorkspace extends CreateWorkspace {

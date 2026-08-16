@@ -1,8 +1,21 @@
 import { getUser } from "@/lib/session";
-import { getWorkspacesFromDb } from "@/lib/workspace";
+import { createWorkspaceInDb, getWorkspacesFromDb } from "@/lib/workspace";
 
 export async function POST(request: Request) {
-    
+    const user = await getUser();
+
+    if(!user) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+        const data = await request.json();
+        const workspace = await createWorkspaceInDb(user.sub, data);
+        return Response.json(workspace, { status: 201 });
+    } catch (error) {
+        console.error("Error creating workspace:", error);
+        return Response.json({ error: "Error creating workspace" }, { status: 500 });
+    }
 }
 
 
